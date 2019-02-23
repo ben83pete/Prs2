@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using prs.Models;
 
 namespace prs.Migrations
 {
     [DbContext(typeof(PrsDbContext))]
-    partial class PrsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190223143417_added vendor Db")]
+    partial class addedvendorDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,7 +89,7 @@ namespace prs.Migrations
                     b.Property<string>("State")
                         .HasMaxLength(2);
 
-                    b.Property<string>("Zipcode")
+                    b.Property<int>("Zipcode")
                         .HasMaxLength(5);
 
                     b.HasKey("Id");
