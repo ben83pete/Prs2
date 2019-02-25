@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using prs.Models;
 
 namespace prs.Migrations
 {
     [DbContext(typeof(PrsDbContext))]
-    partial class PrsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190225194431_remove username check")]
+    partial class removeusernamecheck
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,21 +69,21 @@ namespace prs.Migrations
                     b.Property<bool>("Active");
 
                     b.Property<string>("Delivery_Mode")
-                        .HasMaxLength(30);
+                        .HasMaxLength(300);
 
                     b.Property<string>("Description")
-                        .HasMaxLength(100);
+                        .HasMaxLength(300);
 
                     b.Property<string>("Justification")
-                        .HasMaxLength(75);
+                        .HasMaxLength(300);
 
                     b.Property<string>("Reject_Reason")
-                        .HasMaxLength(30);
+                        .HasMaxLength(300);
+
+                    b.Property<DateTime>("Review_Date");
 
                     b.Property<string>("Status")
-                        .HasMaxLength(30);
-
-                    b.Property<DateTime?>("SubmitDate");
+                        .HasMaxLength(300);
 
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(12, 2)");
@@ -101,11 +103,11 @@ namespace prs.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("Active");
-
                     b.Property<int>("ProductId");
 
-                    b.Property<int>("Qty");
+                    b.Property<string>("Qty")
+                        .IsRequired()
+                        .HasMaxLength(3);
 
                     b.Property<int>("RequestId");
 
@@ -221,8 +223,8 @@ namespace prs.Migrations
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("prs.Models.Request")
-                        .WithMany("RequestLines")
+                    b.HasOne("prs.Models.Request", "Request")
+                        .WithMany()
                         .HasForeignKey("RequestId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

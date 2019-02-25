@@ -82,6 +82,21 @@ namespace prs_server.Controllers {
             return user;
         }
 
+        //Get: api/Users/Auth/Username/Password
+        [HttpGet("/api/Users/Auth/{username}/{password}")]
+        public async Task<ActionResult<User>> GetAuthenticate(string username, string password) {
+            var user = await _context.Users
+                .SingleOrDefaultAsync(u => u.Username.ToLower().Equals(username.ToLower()) 
+                && u.Password.Equals(password));
+
+           
+            if (user == null) {
+                return NotFound();
+            }
+
+            return user;
+        }
+
         private bool UserExists(int id) {
             return _context.Users.Any(e => e.Id == id);
         }

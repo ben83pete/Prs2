@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using prs.Models;
 
 namespace prs.Migrations
 {
     [DbContext(typeof(PrsDbContext))]
-    partial class PrsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190225160201_foreign key")]
+    partial class foreignkey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -19,7 +21,7 @@ namespace prs.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("prs.Models.Product", b =>
+            modelBuilder.Entity("prs.Models.Products", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -42,11 +44,10 @@ namespace prs.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(12, 2)");
 
-                    b.Property<string>("Unit")
-                        .IsRequired()
+                    b.Property<int>("Unit")
                         .HasMaxLength(30);
 
-                    b.Property<int>("VendorId");
+                    b.Property<int?>("VendorId");
 
                     b.HasKey("Id");
 
@@ -55,67 +56,7 @@ namespace prs.Migrations
 
                     b.HasIndex("VendorId");
 
-                    b.ToTable("Product");
-                });
-
-            modelBuilder.Entity("prs.Models.Request", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Active");
-
-                    b.Property<string>("Delivery_Mode")
-                        .HasMaxLength(30);
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("Justification")
-                        .HasMaxLength(75);
-
-                    b.Property<string>("Reject_Reason")
-                        .HasMaxLength(30);
-
-                    b.Property<string>("Status")
-                        .HasMaxLength(30);
-
-                    b.Property<DateTime?>("SubmitDate");
-
-                    b.Property<decimal>("Total")
-                        .HasColumnType("decimal(12, 2)");
-
-                    b.Property<int>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Request");
-                });
-
-            modelBuilder.Entity("prs.Models.Request_Lines", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Active");
-
-                    b.Property<int>("ProductId");
-
-                    b.Property<int>("Qty");
-
-                    b.Property<int>("RequestId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("RequestId");
-
-                    b.ToTable("Request_Lines");
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("prs.Models.User", b =>
@@ -160,7 +101,7 @@ namespace prs.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("prs.Models.Vendor", b =>
+            modelBuilder.Entity("prs.Models.Vendors", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -195,36 +136,14 @@ namespace prs.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Vendor");
+                    b.ToTable("Vendors");
                 });
 
-            modelBuilder.Entity("prs.Models.Product", b =>
+            modelBuilder.Entity("prs.Models.Products", b =>
                 {
-                    b.HasOne("prs.Models.Vendor", "Vendor")
+                    b.HasOne("prs.Models.Vendors", "Vendor")
                         .WithMany()
-                        .HasForeignKey("VendorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("prs.Models.Request", b =>
-                {
-                    b.HasOne("prs.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("prs.Models.Request_Lines", b =>
-                {
-                    b.HasOne("prs.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("prs.Models.Request")
-                        .WithMany("RequestLines")
-                        .HasForeignKey("RequestId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("VendorId");
                 });
 #pragma warning restore 612, 618
         }
