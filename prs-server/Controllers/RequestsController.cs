@@ -7,74 +7,61 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using prs.Models;
 
-namespace prs_server.Controllers
-{
+namespace prs_server.Controllers {
     [Route("api/[controller]")]
     [ApiController]
-    public class RequestsController : ControllerBase
-    {
+    public class RequestsController : ControllerBase {
         private readonly PrsDbContext _context;
 
-        public RequestsController(PrsDbContext context)
-        {
+        public RequestsController(PrsDbContext context) {
             _context = context;
         }
 
         // GET: api/Requests
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Request>>> GetRequest()
-        {
+        public async Task<ActionResult<IEnumerable<Request>>> GetRequest() {
             return await _context.Request.ToListAsync();
         }
 
         // GET: api/Requests/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Request>> GetRequest(int id)
-        {
+        public async Task<ActionResult<Request>> GetRequest(int id) {
             var request = await _context.Request.FindAsync(id);
 
-            if (request == null)
-            {
+            if (request == null) {
                 return NotFound();
             }
-
             return request;
         }
 
         // PUT: api/Requests/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRequest(int id, Request request)
-        {
-            if (id != request.Id)
-            {
+        public async Task<IActionResult> PutRequest(int id, Request request) {
+            if (id != request.Id) {
                 return BadRequest();
             }
 
             _context.Entry(request).State = EntityState.Modified;
 
-            try
-            {
+            try {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RequestExists(id))
-                {
+            catch (DbUpdateConcurrencyException) {
+                if (!RequestExists(id)) {
                     return NotFound();
                 }
-                else
-                {
+                else {
                     throw;
                 }
             }
+            
 
             return NoContent();
         }
 
         // POST: api/Requests
         [HttpPost]
-        public async Task<ActionResult<Request>> PostRequest(Request request)
-        {
+        public async Task<ActionResult<Request>> PostRequest(Request request) {
             _context.Request.Add(request);
             await _context.SaveChangesAsync();
 
@@ -83,11 +70,9 @@ namespace prs_server.Controllers
 
         // DELETE: api/Requests/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Request>> DeleteRequest(int id)
-        {
+        public async Task<ActionResult<Request>> DeleteRequest(int id) {
             var request = await _context.Request.FindAsync(id);
-            if (request == null)
-            {
+            if (request == null) {
                 return NotFound();
             }
 
@@ -97,9 +82,63 @@ namespace prs_server.Controllers
             return request;
         }
 
-        private bool RequestExists(int id)
-        {
-            return _context.Request.Any(e => e.Id == id);
-        }
+        //Set request to REVIEW of APPROVED based on total <= 50
+        [HttpPut("/api/Requests/Review/{id}")]
+        public async Task<IActionResult> PutRequestReview(int id) {
+
+            var request = await _context.Request.FindAsync(id);
+
+            if (request == null) {
+                return NotFound();
+            }
+                            
+            if (request.Total <= 50) {
+                request.Status = "APPROVED";
+            }
+            else {
+                request.Status = "REVIEW";
+            }            
+            await _context.SaveChangesAsync();
+
+             return NoContent();
     }
+
+        //Set request to Rejected 
+        [HttpPut("/api/Requests/Rejected/{id}")]
+        public async Task<IActionResult> PutRequestRejected(int id) {
+
+            var request = await _context.Request.FindAsync(id);
+
+            if (request == null) {
+                return NotFound();
+            }
+
+            request.Status = "Rejected";
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        //Set request to APPROVED 
+        [HttpPut("/api/Requests/Approved/{id}")]
+        public async Task<IActionResult> PutRequestApproved(int id) {
+
+            var request = await _context.Request.FindAsync(id);
+
+            if (request == null) {
+                return NotFound();
+            }
+
+            request.Status = "APPROVED";
+            
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool RequestExists(int id) {
+        return _context.Request.Any(e => e.Id == id);
+    }
+}
 }

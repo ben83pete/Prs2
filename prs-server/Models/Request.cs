@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace prs.Models {
     public class Request {
-        
+
         public int Id { get; set; }
-       
+
         [StringLength(100)]
         public string Description { get; set; }
 
@@ -22,10 +22,10 @@ namespace prs.Models {
         [StringLength(30)]
         public string Delivery_Mode { get; set; }
 
-        public DateTime? SubmitDate { get; set; } 
+        public DateTime? SubmitDate { get; set; } = DateTime.Now;
 
-        [StringLength(30)]
-        public string Status { get; set; }
+        [StringLength(15)]
+        public string Status { get; set; } = "NEW";
 
         [Column(TypeName = "decimal(12, 2)")]
         public decimal Total { get; set; }
@@ -35,7 +35,6 @@ namespace prs.Models {
         public int UserId { get; set; }
         public virtual User User { get; set; }
         public virtual IList<Request_Lines> RequestLines { get; set; }
-
 
 
 

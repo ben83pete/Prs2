@@ -82,7 +82,8 @@ namespace prs_server.Controllers {
             return vendors;
         }
 
-        private bool VendorsExists(int id) {
+
+            private bool VendorsExists(int id) {
             return _context.Vendor.Any(e => e.Id == id);
         }
     }
